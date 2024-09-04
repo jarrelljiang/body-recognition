@@ -40,7 +40,7 @@ export async function setupDatGui(urlParams) {
   // The model folder contains options for model selection.
   const modelFolder = gui.addFolder('Model');
 
-  const model = urlParams.get('model');
+  const model = urlParams.get('model') || 'selfie_segmentation';
   let type = urlParams.get('type');
 
   switch (model) {

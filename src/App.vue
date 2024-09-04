@@ -37,7 +37,6 @@ import { STATE } from "./shared/params";
 import { setBackendAndEnvFlags } from "./shared/util";
 import { onMounted, ref } from "vue";
 
-let url = ref("");
 onMounted(() => {
     let segmenter, camera, stats;
     let fpsDisplayMode = "model";
@@ -205,7 +204,7 @@ onMounted(() => {
                         flipHorizontal: false,
                     });
                     segmentation = segmentation.map(
-                        (singleSegmentation) => singleSegmentation.segmentation
+                        singleSegmentation => singleSegmentation.segmentation
                     );
                 }
             } catch (error) {
@@ -269,7 +268,7 @@ onMounted(() => {
                 const data = await bodySegmentation.toBinaryMask(
                     segmentation,
                     { r: 0, g: 0, b: 0, a: 0 },
-                    { r: 255, g: 255, b: 255, a: 255 },//表示遮罩的背景色，这里设为白色
+                    { r: 0, g: 0, b: 0, a: 255 }, //表示遮罩的背景色，这里设为白色
                     false,
                     options.foregroundThreshold
                 );
@@ -277,10 +276,9 @@ onMounted(() => {
                     canvas,
                     camera.video,
                     data,
-                    options.maskOpacity,//遮罩背景色的透明度,默认配置的是0.7
+                    options.maskOpacity, //遮罩背景色的透明度,默认配置的是0.7
                     options.maskBlur
                 );
-                url.value = canvas.toDataURL();
             } else if (vis === "coloredMask") {
                 const data = await bodySegmentation.toColoredMask(
                     segmentation,
@@ -355,7 +353,7 @@ onMounted(() => {
 
         // Wait for video to be loaded.
         camera.video.load();
-        await new Promise((resolve) => {
+        await new Promise(resolve => {
             camera.video.onloadeddata = () => {
                 resolve(video);
             };
@@ -410,7 +408,7 @@ onMounted(() => {
                     flipHorizontal: false,
                 });
                 segmentation = segmentation.map(
-                    (singleSegmentation) => singleSegmentation.segmentation
+                    singleSegmentation => singleSegmentation.segmentation
                 );
             }
             warmUpTensor.dispose();
@@ -423,7 +421,7 @@ onMounted(() => {
         video.play();
         camera.mediaRecorder.start();
 
-        await new Promise((resolve) => {
+        await new Promise(resolve => {
             camera.video.onseeked = () => {
                 resolve(video);
             };
@@ -435,10 +433,10 @@ onMounted(() => {
     async function app() {
         // Gui content will change depending on which model is in the query string.
         const urlParams = new URLSearchParams(window.location.search);
-        if (!urlParams.has("model")) {
-            alert("Cannot find model in the query string.");
-            return;
-        }
+        // if (!urlParams.has("model")) {
+        //     alert("Cannot find model in the query string.");
+        //     return;
+        // }
 
         await setupDatGui(urlParams);
         stats = setupStats(MODEL_LABEL);
@@ -485,10 +483,9 @@ onMounted(() => {
             <span id="status"></span>
         </div>
     </div>
-    <img :src="url" alt="" />
 </template>
 
-<style scoped>
+<style scoped lang="less">
 body {
     margin: 0;
 }
